@@ -8,7 +8,7 @@ struct parenthese {
 	int lp;
 	int rp;
 };
-string To_SR(const string &s) {
+string ToSr(const string &s) {
 	string str = s;
 	int len = s.length();
 	//找SL、SR分界
@@ -45,7 +45,10 @@ string To_SR(const string &s) {
 	}
 	cout << edge << endl;
 	delete[] cur;
-	// 将SL先互换再反转
+	if (edge == str.length() - 1) { //如果边界到了字符串末尾，则不含有SL字符串无需翻转，直接返回str
+		return str;
+	}
+	// 如果含有SL，将SL先互换再反转
 	int i = 0, j = edge + 1;
 	for (i; i < j; i++) {
 		if (str[i] == '(') {
@@ -62,10 +65,26 @@ string To_SR(const string &s) {
 	return str;
 }
 
+int GetMinP(const string &s) {
+	int cnt = 0;
+	// 栈的思想
+	for (int i = 0; i < s.length(); i++) {
+		if (s[i] == '(') {
+			cnt++;
+		}
+		else {
+			cnt--;
+		}
+	}
+	return cnt;
+}
 int main()
 {
 	string s;
 	cin >> s;
-	string str = To_SR(s);	//将字符串转换为SR形
-	cout << str;
+	string str = ToSr(s);	//将字符串转换为SR形
+	cout << str << endl;
+	int min = GetMinP(str); //计算添加括号的最小值
+	cout << min << endl;
+	system("pause");
 }
