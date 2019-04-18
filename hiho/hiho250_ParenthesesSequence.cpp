@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -34,9 +35,11 @@ string ToSr(const string &s) {
 	int sum_lp = cur[len - 1].lp;
 	int sum_rp = cur[len - 1].rp;
 	int edge = 0;
+	bool flag = false; //标志是否需要翻转
 	for (int i = 0; i < len; i++) {
 		edge = i;
 		if (cur[i].lp<cur[i].rp && (sum_lp - cur[i].lp)>(sum_rp - cur[i].rp)) {
+			flag = true;	//需要翻转
 			break;
 		}
 	}
@@ -45,7 +48,7 @@ string ToSr(const string &s) {
 	}
 	cout << edge << endl;
 	delete[] cur;
-	if (edge == str.length() - 1) { //如果边界到了字符串末尾，则不含有SL字符串无需翻转，直接返回str
+	if (!flag) { //不含SL，无需翻转，直接返回str
 		return str;
 	}
 	// 如果含有SL，将SL先互换再反转
@@ -68,7 +71,7 @@ string ToSr(const string &s) {
 int GetMinP(const string &s) {
 	int cnt = 0;
 	// 栈的思想
-	for (int i = 0; i < s.length(); i++) {
+	for (unsigned int i = 0; i < s.length(); i++) {
 		if (s[i] == '(') {
 			cnt++;
 		}
@@ -78,6 +81,63 @@ int GetMinP(const string &s) {
 	}
 	return cnt;
 }
+
+int f(int ** &dp, int i, int j, int *limit) {
+	if (i == 0||j == 0) {
+		return 1;
+	}
+	int sum = 0;
+	for (int k = 0; k <= limit[i-1]; k++) {
+		sum += f(dp, i - 1, k, limit);
+	}
+	dp[i][j] = sum;
+	return dp[i][j];
+}
+
+int GetT(const string &s) {
+	//打表
+	int cnt = 1; //第一个左括号计数（第一个一定是左括号）
+	int *limit = new int[s.length()];
+	int limit_num = 0;
+	for (unsigned int i = 1; i < s.length(); i++) {	//左括号前可以插入右括号
+		if (s[i] == '(') {
+			limit[limit_num] = cnt;
+			cnt++;
+			limit_num++;
+		}
+		else { //s[i] ==')'
+			cnt--;
+		}
+	}
+	limit[limit_num] = cnt; //最后一个位置可以插入右括号
+	/*
+	for (int i = 0; i < limit_num + 1; i++) {
+		cout << i << "--" << limit[i] << endl;
+	}
+	*/
+	//动态规划
+	//f[i][j]表示在前i个位置一共插入了j个右括号有多少种方法
+	//f[i][j] = f[i-1][0] + f[i-1][1] + ... + f[i-1][limit[i-1]]
+	
+	int **dp;
+	dp = new int*[limit_num + 1];
+	for (int i = 0; i < limit_num + 1; i++) {
+		dp[i] = new int[cnt + 1];
+	}
+	int result = f(dp, limit_num, cnt, limit);
+	for (int i = 0; i < limit_num + 1; i++) {
+		for (int j = 0; j < cnt + 1; j++) {
+			cout << dp[i][j] << "--";
+		}
+		cout << "*" << endl;
+	}
+	for (int i = 0; i < limit_num; i++) {
+		delete[] dp[i];
+	}
+	delete[] dp;
+	delete[] limit;
+	return result;
+}
 int main()
 {
 	string s;
@@ -86,5 +146,7 @@ int main()
 	cout << str << endl;
 	int min = GetMinP(str); //计算添加括号的最小值
 	cout << min << endl;
+	int t = GetT(str); //计算插入括号的不同组合数
+	cout << t << endl;
 	system("pause");
 }
