@@ -38,15 +38,17 @@ string ToSr(const string &s) {
 	bool flag = false; //标志是否需要翻转
 	for (int i = 0; i < len; i++) {
 		edge = i;
-		if (cur[i].lp<cur[i].rp && (sum_lp - cur[i].lp)>(sum_rp - cur[i].rp)) {
+		if (cur[i].lp<cur[i].rp && (sum_lp - cur[i].lp)>=(sum_rp - cur[i].rp)) {
 			flag = true;	//需要翻转
 			break;
 		}
 	}
+/*
 	for (int i = 0; i < len; i++) {
 		cout <<i<<"---"<< cur[i].lp << "---" << cur[i].rp << endl;
 	}
 	cout << edge << endl;
+*/
 	delete[] cur;
 	if (!flag) { //不含SL，无需翻转，直接返回str
 		return str;
@@ -61,6 +63,7 @@ string ToSr(const string &s) {
 			str[i] = '(';
 		}
 	}
+	i = 0, j = edge;
 	while (i < j) {
 		swap(str[i++], str[j--]);
 	}
@@ -82,13 +85,19 @@ int GetMinP(const string &s) {
 	return cnt;
 }
 
+//dp:
 int f(int ** &dp, int i, int j, int *limit) {
-	if (i == 0||j == 0) {
+	if (i == 0) {
 		return 1;
 	}
 	int sum = 0;
-	for (int k = 0; k <= limit[i-1]; k++) {
-		sum += f(dp, i - 1, k, limit);
+	if (j > limit[i]) {
+		sum = 0;
+	}
+	else {
+		for (int k = 0; k <= limit[i - 1]; k++) {
+			sum += f(dp, i - 1, k, limit);
+		}
 	}
 	dp[i][j] = sum;
 	return dp[i][j];
@@ -115,6 +124,7 @@ int GetT(const string &s) {
 		cout << i << "--" << limit[i] << endl;
 	}
 	*/
+
 	//动态规划
 	//f[i][j]表示在前i个位置一共插入了j个右括号有多少种方法
 	//f[i][j] = f[i-1][0] + f[i-1][1] + ... + f[i-1][limit[i-1]]
@@ -125,12 +135,14 @@ int GetT(const string &s) {
 		dp[i] = new int[cnt + 1];
 	}
 	int result = f(dp, limit_num, cnt, limit);
+/*
 	for (int i = 0; i < limit_num + 1; i++) {
 		for (int j = 0; j < cnt + 1; j++) {
 			cout << dp[i][j] << "--";
 		}
 		cout << "*" << endl;
 	}
+*/
 	for (int i = 0; i < limit_num; i++) {
 		delete[] dp[i];
 	}
@@ -143,10 +155,14 @@ int main()
 	string s;
 	cin >> s;
 	string str = ToSr(s);	//将字符串转换为SR形
-	cout << str << endl;
+	//cout << str << endl;
 	int min = GetMinP(str); //计算添加括号的最小值
-	cout << min << endl;
+	cout << min << " ";
 	int t = GetT(str); //计算插入括号的不同组合数
 	cout << t << endl;
-	system("pause");
+	//system("pause");
 }
+//dp：
+//令f[i][j]表示在前i个位置一共插入了j个右括号有多少种方法。如果j > limit[i]则f[i][j] = 0；
+//否则 f[i][j] = f[i - 1][0] + f[i - 1][1] + ... f[i - 1][limit[i - 1]]
+//如何转换成代码？
