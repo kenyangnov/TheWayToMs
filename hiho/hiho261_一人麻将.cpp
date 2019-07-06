@@ -75,7 +75,7 @@ bool ok2() {
 	int num[3];
 	memset(num, 0, sizeof(num));
 	for (int i = 0; i <= 2; i++) {
-		for (int j = 0; j <= 9; j++) {
+		for (int j = 1; j <= 9; j++) {	//j从1开始(1~9)
 			num[i] += cnt[i][j] / 2;
 		}
 	}
@@ -99,6 +99,10 @@ int main() {
 	for (int i = 0; i < 14; i++) {
 		cin >> element;
 		cnt[element[0] - 'a'][element[1] - '0']++;
+	}
+	if(ok1()||ok2()){	//起手就胡？！
+		cout<<"0";
+		return 0;
 	}
 	for (int i = 0; i < n; i++) {
 		cin >> element;
