@@ -7,7 +7,7 @@ using namespace std;
 
 int n, m, q;
 const int maxn = 1e5 + 1;
-int score[maxn];
+int score[maxn];	//score[i]表示i到i的父结点的距离，即i的父结点比i高的分数
 int parent[maxn];
 
 void init() {
@@ -56,3 +56,9 @@ int main() {
 	system("pause");
 	return 0;
 }
+/*
+方程组：
+fx - x = sx
+fy - y = sy		===>> fy - fx = sy - sx - value 
+x - y = value
+*/

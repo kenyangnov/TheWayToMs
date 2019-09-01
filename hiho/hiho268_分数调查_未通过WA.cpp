@@ -81,7 +81,7 @@ int main() {
 /*
 方程组：
 x - fx = sx
-y - fy = sy		===>> fx - fy = value - sx + sy （注：做减法时，谁是减数就是求与谁的相对值，以y为根就要求与y的相对值）
+y - fy = sy		===>> fx - fy = value - sx + sy 
 x - y = value
-
+（注：做减法时，谁是减数就是求与谁的相对值，以y为根就要求与y的相对值）
 */
