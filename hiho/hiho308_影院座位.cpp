@@ -45,9 +45,10 @@ int main() {
                 if (seats[r] == 0) s--, rc++, sum = sum + (r - n);
             }
         }
-        ans = min(ans, sum);
+        // Set the l, r to be boundary
         while (seats[l] != 0) l++;
         while (seats[r] != 0) r--;
+        ans = min(ans, sum);
         // Translate from left to right
         for (int i = n + 1; i <= 2 * n; i++) {
             sum = sum + lc - rc;
