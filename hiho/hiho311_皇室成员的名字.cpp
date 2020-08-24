@@ -31,16 +31,29 @@ int transfer(string &s) {
     return sum;
 }
 
-bool customCompare(pair<string, string> &a, pair<string, string> &b) {
-    int pos = a.first.compare(b.first);
-    if (pos != 0)
-        return pos < 0;
-    else
-        return transfer(a.second) < transfer(b.second);
-}
+class customCompare{
+    public:
+        bool operator()(pair<string, string> &a, pair<string, string> &b) const{
+            int pos = a.first.compare(b.first);
+            if(pos!=0){
+                return pos<0;
+            } else{
+                return transfer(a.second)<transfer(b.second);
+            }
+        }
+};
+
+// bool customCompare(pair<string, string> &a, pair<string, string> &b) {
+//     int pos = a.first.compare(b.first);
+//     if (pos != 0)
+//         return pos < 0;
+//     else
+//         return transfer(a.second) < transfer(b.second);
+// }
 
 void sortName(vector<pair<string, string>> &name) {
-    sort(name.begin(), name.end(), customCompare);
+    //sort(name.begin(), name.end(), customCompare);
+    sort(name.begin(), name.end(), customCompare());
     for (int i = 0; i < name.size(); i++) {
         cout << name[i].first << " " << name[i].second << endl;
     }
